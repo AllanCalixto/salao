@@ -19,6 +19,7 @@ public class Cliente {
 
 
     public Integer getId() {
+
         return id;
     }
 
