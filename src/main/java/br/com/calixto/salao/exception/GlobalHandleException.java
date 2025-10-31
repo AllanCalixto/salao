@@ -17,4 +17,19 @@ public class GlobalHandleException {
     public ResponseEntity<String> handleClienteNaoEncontradoException(ClienteNaoEncontradoException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ProfissionalJaCadastradoException.class)
+    public ResponseEntity<String> handleProfissionalJaCadastradoException(ProfissionalJaCadastradoException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ProfissionalNaoEncontradoException.class)
+    public ResponseEntity<String> handleProfissionalNaoEncontradoException(ProfissionalNaoEncontradoException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AtendimentoException.class)
+    public ResponseEntity<String> handleAtendimentoException(AtendimentoException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }

@@ -2,6 +2,7 @@ package br.com.calixto.salao.service;
 
 import br.com.calixto.salao.dto.request.AtendimentoRequest;
 import br.com.calixto.salao.dto.response.AtendimentoResponse;
+import br.com.calixto.salao.exception.AtendimentoException;
 import br.com.calixto.salao.exception.ClienteNaoEncontradoException;
 import br.com.calixto.salao.exception.ProfissionalNaoEncontradoException;
 import br.com.calixto.salao.exception.ServicoInvalidoException;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AtendimentoServiceImpl implements IAtendimentoService{
+public class AtendimentoServiceImpl implements IAtendimentoService {
 
     private final AtendimentoRepository atendimentoRepository;
     private final ClienteRepository clienteRepository;
@@ -42,8 +43,26 @@ public class AtendimentoServiceImpl implements IAtendimentoService{
         Profissional profissional = profissionalRepository.findById(atendimentoRequest.profissionalId())
                 .orElseThrow(() -> new ProfissionalNaoEncontradoException("Profissional não foi encontrado"));
 
+
+        // Valida se o serviço deve pertencer ao profissional
         if (!profissional.getServicos().contains(atendimentoRequest.servicoEscolhido().toUpperCase())) {
-            throw new ServicoInvalidoException("O Serviço "+ atendimentoRequest.servicoEscolhido() + " não pertence a especialidade do profissional "+ profissional.getNome());
+            throw new ServicoInvalidoException(
+                    "O Serviço " + atendimentoRequest.servicoEscolhido() +
+                            " não pertence a especialidade do profissional " + profissional.getNome());
+        }
+
+        // Valida se o cliente já tem atendimento no mesmo dia e horário
+        boolean clienteOcupado = atendimentoRepository.existsAtendimentoClienteMesmoHorario(cliente.getId(), atendimentoRequest.dataAtendimento());
+
+        if (clienteOcupado) {
+            throw new AtendimentoException("O cliente " + cliente.getNome() + " já possui um agendamento para " + atendimentoRequest.dataAtendimento());
+        }
+
+        // Valida se o profissional já tem atendimento no mesmo dia e horário
+        boolean profissionalOcupado = atendimentoRepository.existsAtendimentoProfissionalMesmoHorario(profissional.getId(), atendimentoRequest.dataAtendimento());
+
+        if (profissionalOcupado) {
+            throw new AtendimentoException("O profissional "+profissional.getNome()+ " já possui um agendamento para "+ atendimentoRequest.dataAtendimento());
         }
 
         Atendimento atendimento = new Atendimento();
@@ -53,10 +72,8 @@ public class AtendimentoServiceImpl implements IAtendimentoService{
         atendimento.setDataAtendimento(atendimentoRequest.dataAtendimento());
         atendimento.setPreco(atendimentoRequest.preco());
 
-
         Atendimento salvo = atendimentoRepository.save(atendimento);
         return atendimentoMapper.toDtoResponse(salvo);
-
     }
 
     @Override
@@ -89,7 +106,7 @@ public class AtendimentoServiceImpl implements IAtendimentoService{
 
 
         if (!profissional.getServicos().contains(request.servicoEscolhido().toUpperCase())) {
-            throw new ServicoInvalidoException("O Serviço "+ request.servicoEscolhido() +
+            throw new ServicoInvalidoException("O Serviço " + request.servicoEscolhido() +
                     " não pertence à especialidade do profissional " + profissional.getNome());
         }
 
