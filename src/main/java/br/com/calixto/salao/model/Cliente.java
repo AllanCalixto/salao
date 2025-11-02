@@ -2,6 +2,8 @@ package br.com.calixto.salao.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente {
@@ -16,10 +18,11 @@ public class Cliente {
     @Column(name = "tefone_cliente")
     private String telefone;
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Atendimento> atendimentos;
 
 
     public Integer getId() {
-
         return id;
     }
 
@@ -41,5 +44,13 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public List<Atendimento> getAtendimentos() {
+        return atendimentos;
+    }
+
+    public void setAtendimentos(List<Atendimento> atendimentos) {
+        this.atendimentos = atendimentos;
     }
 }

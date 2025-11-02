@@ -28,6 +28,9 @@ public class Profissional {
     @Column(name = "servico")
     private List<String> servicos;
 
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Atendimento> atendimentos;
+
 
     public Integer getId() {
         return id;
@@ -59,5 +62,13 @@ public class Profissional {
 
     public void setServicos(List<String> servicos) {
         this.servicos = servicos;
+    }
+
+    public List<Atendimento> getAtendimentos() {
+        return atendimentos;
+    }
+
+    public void setAtendimentos(List<Atendimento> atendimentos) {
+        this.atendimentos = atendimentos;
     }
 }

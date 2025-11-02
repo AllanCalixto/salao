@@ -31,6 +31,8 @@ public class Atendimento {
     private LocalDateTime dataAtendimento;
 
 
+
+
     public Integer getId() {
         return id;
     }
