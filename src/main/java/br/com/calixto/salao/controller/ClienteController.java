@@ -1,6 +1,7 @@
 package br.com.calixto.salao.controller;
 
 import br.com.calixto.salao.exception.ClienteJaCadastradoException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
+@SecurityRequirement(name = "bearer-key")
 public class ClienteController {
 	
 	private final IClienteService iClienteService;

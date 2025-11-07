@@ -3,6 +3,7 @@ package br.com.calixto.salao.controller;
 import br.com.calixto.salao.dto.request.ProfissionalRequest;
 import br.com.calixto.salao.dto.response.ProfissionalResponse;
 import br.com.calixto.salao.service.IProfissionalService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/profissionais")
+@SecurityRequirement(name = "bearer-key")
 public class ProfissionalController {
 
     private final IProfissionalService iProfissionalService;

@@ -1,4 +1,4 @@
 package br.com.calixto.salao.dto.request;
 
-public record LoginRequest() {
+public record LoginRequest(String login, String senha) {
 }
