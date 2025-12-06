@@ -83,10 +83,6 @@ class AtendimentoServiceImplTest {
         );
     }
 
-    // =====================================================
-    // SALVAR ATENDIMENTO
-    // =====================================================
-
     @Test
     void deveSalvarAtendimentoComSucesso() {
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
@@ -150,10 +146,6 @@ class AtendimentoServiceImplTest {
         assertThrows(AtendimentoException.class, () -> atendimentoService.salvar(request));
     }
 
-    // =====================================================
-    // LISTAR TODOS
-    // =====================================================
-
     @Test
     void deveListarTodosOsAtendimentos() {
         when(atendimentoRepository.findAll()).thenReturn(List.of(atendimento));
@@ -165,10 +157,6 @@ class AtendimentoServiceImplTest {
         assertEquals("Luisa", lista.get(0).clienteNome());
         verify(atendimentoRepository, times(1)).findAll();
     }
-
-    // =====================================================
-    // BUSCAR POR ID
-    // =====================================================
 
     @Test
     void deveBuscarAtendimentoPorId() {
@@ -187,10 +175,6 @@ class AtendimentoServiceImplTest {
 
         assertThrows(RuntimeException.class, () -> atendimentoService.buscarPorId(1));
     }
-
-    // =====================================================
-    // ATUALIZAR
-    // =====================================================
 
     @Test
     void deveAtualizarAtendimentoComSucesso() {
@@ -214,10 +198,6 @@ class AtendimentoServiceImplTest {
 
         assertThrows(ProfissionalNaoEncontradoException.class, () -> atendimentoService.atualizar(1, request));
     }
-
-    // =====================================================
-    // DELETAR
-    // =====================================================
 
     @Test
     void deveDeletarAtendimentoComSucesso() {
