@@ -44,7 +44,7 @@ public class ClienteController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<ClienteResponse> buscarPorNome(String nome){
+    public ResponseEntity<ClienteResponse> buscarPorNome(@PathVariable String nome){
         var cliente = iClienteService.findByExistsNome(nome);
         return ResponseEntity.ok(cliente);
     }
@@ -61,4 +61,12 @@ public class ClienteController {
         var cliente = iClienteService.atualizar(id, clienteRequest);
         return ResponseEntity.ok(cliente);
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        iClienteService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

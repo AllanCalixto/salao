@@ -74,4 +74,13 @@ public class ClienteServiceImpl implements IClienteService{
         Cliente clienteAtualizado = clienteRepository.save(clienteExistente);
         return clienteMapper.toDtoResponse(clienteAtualizado);
     }
+
+    @Override
+    public void deletar(Integer id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new ClienteNaoEncontradoException("Cliente "+id+ " não foi encontrado!");
+        }
+        clienteRepository.deleteById(id);
+
+    }
 }

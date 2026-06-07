@@ -32,4 +32,15 @@ public class GlobalHandleException {
     public ResponseEntity<String> handleAtendimentoException(AtendimentoException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ServicoInvalidoException.class)
+    public ResponseEntity<String> handleServicoInvalidoException(ServicoInvalidoException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erro interno do servidor: " + ex.getMessage());
+    }
 }

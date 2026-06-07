@@ -9,5 +9,6 @@ public record AtendimentoRequest(
         @NotNull Integer profissionalId,
         @NotNull String servicoEscolhido,
         @NotNull Double preco,
-        @NotNull LocalDateTime dataAtendimento
+        @NotNull LocalDateTime dataAtendimento,
+        LocalDateTime dataFim
 ) {}

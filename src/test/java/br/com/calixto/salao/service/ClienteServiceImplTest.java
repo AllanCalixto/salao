@@ -196,5 +196,30 @@ class ClienteServiceImplTest {
                 () -> clienteService.atualizar(1, requestAtualizado));
         verify(clienteRepository, never()).save(any(Cliente.class));
     }
+
+    @Test
+    void deveDeletarClienteComSucesso() {
+        when(clienteRepository.existsById(1)).thenReturn(true);
+
+        clienteService.deletar(1);
+
+        verify(clienteRepository, times(1)).existsById(1);
+        verify(clienteRepository, times(1)).deleteById(1);
+    }
+
+    @Test
+    void deveLancarExcecaoAoDeletarClienteInexistente() {
+        when(clienteRepository.existsById(999)).thenReturn(false);
+
+        ClienteNaoEncontradoException exception = assertThrows(
+                ClienteNaoEncontradoException.class,
+                () -> clienteService.deletar(999)
+        );
+
+        assertEquals("Cliente 999 não foi encontrado!", exception.getMessage());
+
+        verify(clienteRepository, times(1)).existsById(999);
+        verify(clienteRepository, never()).deleteById(anyInt());
+    }
 }
 

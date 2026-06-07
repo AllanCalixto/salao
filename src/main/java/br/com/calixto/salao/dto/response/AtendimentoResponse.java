@@ -9,5 +9,7 @@ public record AtendimentoResponse(
         String especialidade,
         String servicoEscolhido,
         Double preco,
-        LocalDateTime dataAtendimento
+        LocalDateTime dataAtendimento,
+        LocalDateTime dataFim,
+        String status
 ) {}

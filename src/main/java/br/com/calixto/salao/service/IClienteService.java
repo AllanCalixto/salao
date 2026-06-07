@@ -12,6 +12,5 @@ public interface IClienteService {
 	ClienteResponse findByExistsTelefone(String telefone);
 	ClienteResponse findById(Integer id);
 	ClienteResponse atualizar(Integer id, ClienteRequest clienteRequest);
-	
-
+    void deletar(Integer id);
 }

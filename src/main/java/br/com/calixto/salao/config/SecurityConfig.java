@@ -38,6 +38,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/disponibilidade/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/agendamento/publico/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/servicos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/servicos/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())

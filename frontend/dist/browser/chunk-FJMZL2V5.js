@@ -1,0 +1,1 @@
+var E=function(A){return A.MANICURE="MANICURE",A.CABELEREIRA="CABELEREIRA",A.DEPILADORA="DEPILADORA",A}(E||{}),R={[E.MANICURE]:"Manicure",[E.CABELEREIRA]:"Cabeleireira",[E.DEPILADORA]:"Depiladora"};export{E as a,R as b};

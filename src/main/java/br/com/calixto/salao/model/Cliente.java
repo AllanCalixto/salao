@@ -53,4 +53,5 @@ public class Cliente {
     public void setAtendimentos(List<Atendimento> atendimentos) {
         this.atendimentos = atendimentos;
     }
+
 }

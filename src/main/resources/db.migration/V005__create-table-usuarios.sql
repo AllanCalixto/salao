@@ -1,5 +1,5 @@
-CREATE TABLE clientes (
+CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    login VARCHAR(150) NOT NULL,
+    login VARCHAR(150) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL
 );
