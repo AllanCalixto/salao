@@ -48,14 +48,16 @@ class ProfissionalServiceImplTest {
         request = new ProfissionalRequest(
                 "Joana Silva",
                 Especialidade.MANICURE,
-                List.of("MÃO", "PÉ")
+                List.of("MÃO", "PÉ"),
+                null
         );
 
         response = new ProfissionalResponse(
                 1,
                 "Joana Silva",
                 Especialidade.MANICURE,
-                List.of("MÃO", "PÉ")
+                List.of("MÃO", "PÉ"),
+                List.of()
         );
     }
 
@@ -95,7 +97,8 @@ class ProfissionalServiceImplTest {
                 2,
                 "Maria Santos",
                 Especialidade.CABELEREIRA,
-                List.of("CORTE", "ESCOVA")
+                List.of("CORTE", "ESCOVA"),
+                List.of()
         );
 
         when(profissionalRepository.findAll()).thenReturn(List.of(profissional, profissional2));
@@ -136,14 +139,16 @@ class ProfissionalServiceImplTest {
         ProfissionalRequest requestAtualizado = new ProfissionalRequest(
                 "Joana Silva Atualizada",
                 Especialidade.CABELEREIRA,
-                List.of("CORTE", "ESCOVA", "COLORAÇÃO")
+                List.of("CORTE", "ESCOVA", "COLORAÇÃO"),
+                null
         );
 
         ProfissionalResponse responseAtualizado = new ProfissionalResponse(
                 1,
                 "Joana Silva Atualizada",
                 Especialidade.CABELEREIRA,
-                List.of("CORTE", "ESCOVA", "COLORAÇÃO")
+                List.of("CORTE", "ESCOVA", "COLORAÇÃO"),
+                List.of()
         );
 
         when(profissionalRepository.findById(1)).thenReturn(Optional.of(profissional));
@@ -164,7 +169,8 @@ class ProfissionalServiceImplTest {
         ProfissionalRequest requestAtualizado = new ProfissionalRequest(
                 "Joana Silva Atualizada",
                 Especialidade.CABELEREIRA,
-                List.of("CORTE", "ESCOVA")
+                List.of("CORTE", "ESCOVA"),
+                null
         );
 
         when(profissionalRepository.findById(999)).thenReturn(Optional.empty());

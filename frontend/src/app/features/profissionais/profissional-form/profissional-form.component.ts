@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,9 +10,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ProfissionalService } from '../../../core/services/profissional.service';
 import { Especialidade, ESPECIALIDADE_LABELS } from '../../../core/models';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+
+interface DiaSemanaOption {
+  value: number;
+  label: string;
+}
 
 @Component({
   selector: 'app-profissional-form',
@@ -29,6 +35,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     LoadingSpinnerComponent,
   ],
   template: `
@@ -77,6 +84,32 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
                 }
               </mat-form-field>
 
+              <!-- Horários de Atendimento -->
+              <mat-card class="disponibilidade-card">
+                <mat-card-header>
+                  <mat-card-title>Horários de Atendimento</mat-card-title>
+                  <mat-card-subtitle>Defina os dias e horários em que o profissional estará disponível para agendamento</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <div formArrayName="disponibilidade">
+                    @for (item of disponibilidadeControls; track $index; let i = $index) {
+                      <div class="disponibilidade-row" [formGroupName]="i">
+                        <mat-checkbox formControlName="selecionado"></mat-checkbox>
+                        <span class="dia-label">{{ diasSemana[i].label }}</span>
+                        <mat-form-field appearance="outline" class="time-field">
+                          <mat-label>Início</mat-label>
+                          <input matInput type="time" formControlName="horaInicio" />
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="time-field">
+                          <mat-label>Fim</mat-label>
+                          <input matInput type="time" formControlName="horaFim" />
+                        </mat-form-field>
+                      </div>
+                    }
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
               <div class="form-actions">
                 <button mat-stroked-button type="button" routerLink="/profissionais">Cancelar</button>
                 <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
@@ -99,6 +132,35 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
         display: flex;
         flex-direction: column;
         gap: 16px;
+      }
+
+      .disponibilidade-card {
+        margin-top: 16px;
+      }
+
+      .disponibilidade-card mat-card-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .disponibilidade-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .disponibilidade-row:last-child {
+        border-bottom: none;
+      }
+
+      .dia-label {
+        min-width: 90px;
+        font-weight: 500;
+      }
+
+      .time-field {
+        width: 120px;
       }
 
       button[type='submit'] {
@@ -126,11 +188,34 @@ export class ProfissionalFormComponent implements OnInit {
   loading = signal(false);
   submitting = false;
 
+  readonly diasSemana: DiaSemanaOption[] = [
+    { value: 0, label: 'Domingo' },
+    { value: 1, label: 'Segunda' },
+    { value: 2, label: 'Terça' },
+    { value: 3, label: 'Quarta' },
+    { value: 4, label: 'Quinta' },
+    { value: 5, label: 'Sexta' },
+    { value: 6, label: 'Sábado' },
+  ];
+
   profissionalForm = this.fb.nonNullable.group({
     nome: ['', Validators.required],
     especialidade: ['' as Especialidade, Validators.required],
     servicosText: ['', Validators.required],
+    disponibilidade: this.fb.array(
+      this.diasSemana.map(() =>
+        this.fb.group({
+          selecionado: [false],
+          horaInicio: ['08:00'],
+          horaFim: ['18:00'],
+        })
+      )
+    ),
   });
+
+  get disponibilidadeControls() {
+    return (this.profissionalForm.get('disponibilidade') as FormArray).controls;
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -151,6 +236,22 @@ export class ProfissionalFormComponent implements OnInit {
           especialidade: prof.especialidade,
           servicosText: prof.servicos.join('\n'),
         });
+
+        if (prof.disponibilidade && prof.disponibilidade.length > 0) {
+          const dispArray = this.profissionalForm.get('disponibilidade') as FormArray;
+          for (const disp of prof.disponibilidade) {
+            const index = this.diasSemana.findIndex(d => d.value === disp.diaSemana);
+            if (index >= 0) {
+              const group = dispArray.at(index);
+              group.patchValue({
+                selecionado: disp.ativo,
+                horaInicio: disp.horaInicio.substring(0, 5),
+                horaFim: disp.horaFim.substring(0, 5),
+              });
+            }
+          }
+        }
+
         this.loading.set(false);
       },
       error: () => {
@@ -171,10 +272,24 @@ export class ProfissionalFormComponent implements OnInit {
       .map((s) => s.trim().toUpperCase())
       .filter((s) => s.length > 0);
 
+    const disponibilidade = formValue.disponibilidade
+      .map((item, index) => ({
+        diaSemana: this.diasSemana[index].value,
+        horaInicio: item.selecionado ? item.horaInicio + ':00' : null,
+        horaFim: item.selecionado ? item.horaFim + ':00' : null,
+      }))
+      .filter(item => item.horaInicio !== null)
+      .map(item => ({
+        diaSemana: item.diaSemana,
+        horaInicio: item.horaInicio!,
+        horaFim: item.horaFim!,
+      }));
+
     const request = {
       nome: formValue.nome,
       especialidade: formValue.especialidade,
       servicos,
+      disponibilidade: disponibilidade.length > 0 ? disponibilidade : undefined,
     };
 
     const action$ = this.isEditing && this.editingId

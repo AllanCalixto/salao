@@ -8,6 +8,7 @@ public record ProfissionalResponse(
         Integer id,
         String nome,
         Especialidade especialidade,
-        List<String> servicos
+        List<String> servicos,
+        List<DisponibilidadeProfissionalResponse> disponibilidade
 ) {
 }

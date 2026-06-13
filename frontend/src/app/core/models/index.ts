@@ -31,10 +31,17 @@ export const ESPECIALIDADE_LABELS: Record<Especialidade, string> = {
   [Especialidade.DEPILADORA]: 'Depiladora',
 };
 
+export interface DisponibilidadeItemRequest {
+  diaSemana: number;
+  horaInicio: string;
+  horaFim: string;
+}
+
 export interface ProfissionalRequest {
   nome: string;
   especialidade: Especialidade;
   servicos: string[];
+  disponibilidade?: DisponibilidadeItemRequest[];
 }
 
 export interface ProfissionalResponse {
@@ -42,6 +49,7 @@ export interface ProfissionalResponse {
   nome: string;
   especialidade: Especialidade;
   servicos: string[];
+  disponibilidade?: DisponibilidadeProfissionalResponse[];
 }
 
 export interface AtendimentoRequest {

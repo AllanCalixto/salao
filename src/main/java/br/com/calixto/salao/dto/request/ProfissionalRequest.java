@@ -15,7 +15,9 @@ public record ProfissionalRequest(
         Especialidade especialidade,
 
         @NotEmpty(message = "O profissional deve ter pelo menos um serviço.")
-        List<String> servicos
+        List<String> servicos,
+
+        List<DisponibilidadeItemRequest> disponibilidade
 
 ) {
 }
