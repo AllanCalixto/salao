@@ -18,6 +18,7 @@ import {
   ProfissionalResponse,
   ServicoResponse,
   DisponibilidadeResponse,
+  DisponibilidadeProfissionalResponse,
 } from '../../core/models';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
@@ -544,8 +545,8 @@ export class AgendamentoPublicoComponent implements OnInit {
       });
 
       // Carrega os dias disponiveis do profissional
-      this.agendamentoService.listarDisponibilidadeProfissional(profId).subscribe({
-        next: (dias) => {
+      this.agendamentoService.listarDisponibilidadeProfissional(profId!).subscribe({
+        next: (dias: DisponibilidadeProfissionalResponse[]) => {
           const diasAtivos = dias.filter(d => d.ativo).map(d => d.diaSemana);
           this.diasDisponiveis.set(diasAtivos);
         },

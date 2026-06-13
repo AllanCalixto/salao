@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   DisponibilidadeResponse,
+  DisponibilidadeProfissionalResponse,
   AgendamentoPublicoRequest,
   AgendamentoRealizadoResponse,
   ProfissionalResponse,
@@ -39,6 +40,14 @@ export class AgendamentoService {
     return this.http.post<AgendamentoRealizadoResponse>(
       '/agendamento/publico',
       request
+    );
+  }
+
+  listarDisponibilidadeProfissional(
+    profissionalId: number
+  ): Observable<DisponibilidadeProfissionalResponse[]> {
+    return this.http.get<DisponibilidadeProfissionalResponse[]>(
+      `/profissionais/${profissionalId}/disponibilidade`
     );
   }
 }

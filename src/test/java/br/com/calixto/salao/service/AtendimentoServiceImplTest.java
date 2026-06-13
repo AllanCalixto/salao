@@ -119,8 +119,8 @@ class AtendimentoServiceImplTest {
     void deveSalvarAtendimentoComSucesso() {
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
         when(profissionalRepository.findById(1)).thenReturn(Optional.of(profissional));
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(false);
-        when(atendimentoRepository.existsConflitoCliente(anyInt(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoClienteIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
         when(atendimentoRepository.save(any(Atendimento.class))).thenReturn(atendimento);
         when(atendimentoMapper.toDtoResponse(any(Atendimento.class))).thenReturn(response);
 
@@ -166,8 +166,8 @@ class AtendimentoServiceImplTest {
     void deveLancarExcecaoQuandoClienteJaTemConflito() {
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
         when(profissionalRepository.findById(1)).thenReturn(Optional.of(profissional));
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(false);
-        when(atendimentoRepository.existsConflitoCliente(anyInt(), any(), any())).thenReturn(true);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoClienteIgnorando(anyInt(), any(), any(), any())).thenReturn(true);
 
         assertThrows(AtendimentoException.class, () -> atendimentoService.salvar(request));
     }
@@ -176,7 +176,7 @@ class AtendimentoServiceImplTest {
     void deveLancarExcecaoQuandoProfissionalJaTemConflito() {
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
         when(profissionalRepository.findById(1)).thenReturn(Optional.of(profissional));
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(true);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(true);
 
         assertThrows(AtendimentoException.class, () -> atendimentoService.salvar(request));
     }
@@ -231,8 +231,8 @@ class AtendimentoServiceImplTest {
         when(atendimentoRepository.findById(1)).thenReturn(Optional.of(atendimento));
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
         when(profissionalRepository.findById(1)).thenReturn(Optional.of(profissional));
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(false);
-        when(atendimentoRepository.existsConflitoCliente(anyInt(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoClienteIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
         when(atendimentoRepository.save(any(Atendimento.class))).thenReturn(atendimento);
         when(atendimentoMapper.toDtoResponse(any(Atendimento.class))).thenReturn(response);
 
@@ -372,8 +372,8 @@ class AtendimentoServiceImplTest {
         when(servicoRepository.findById(1)).thenReturn(Optional.of(servico));
         when(disponibilidadeRepository.findByProfissionalIdAndAtivoTrue(1)).thenReturn(List.of(disp));
         when(clienteRepository.findByTelefone("11999999999")).thenReturn(Optional.of(cliente));
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(false);
-        when(atendimentoRepository.existsConflitoCliente(anyInt(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoClienteIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
         when(atendimentoRepository.save(any(Atendimento.class))).thenReturn(atendimento);
 
         AgendamentoRealizadoResponse expectedResponse = new AgendamentoRealizadoResponse(
@@ -411,8 +411,8 @@ class AtendimentoServiceImplTest {
         when(disponibilidadeRepository.findByProfissionalIdAndAtivoTrue(1)).thenReturn(List.of(disp));
         when(clienteRepository.findByTelefone("11988888888")).thenReturn(Optional.empty());
         when(clienteRepository.save(any(Cliente.class))).thenReturn(novoCliente);
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(false);
-        when(atendimentoRepository.existsConflitoCliente(anyInt(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoClienteIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
         when(atendimentoRepository.save(any(Atendimento.class))).thenReturn(atendimento);
 
         AgendamentoRealizadoResponse expectedResponse = new AgendamentoRealizadoResponse(
@@ -449,8 +449,8 @@ class AtendimentoServiceImplTest {
         when(servicoRepository.save(any(Servico.class))).thenReturn(novoServico);
         when(disponibilidadeRepository.findByProfissionalIdAndAtivoTrue(1)).thenReturn(List.of(disp));
         when(clienteRepository.findByTelefone("11999999999")).thenReturn(Optional.of(cliente));
-        when(atendimentoRepository.existsConflitoProfissional(anyInt(), any(), any())).thenReturn(false);
-        when(atendimentoRepository.existsConflitoCliente(anyInt(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoProfissionalIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepository.existsConflitoClienteIgnorando(anyInt(), any(), any(), any())).thenReturn(false);
         when(atendimentoRepository.save(any(Atendimento.class))).thenReturn(atendimento);
 
         AgendamentoRealizadoResponse expectedResponse = new AgendamentoRealizadoResponse(

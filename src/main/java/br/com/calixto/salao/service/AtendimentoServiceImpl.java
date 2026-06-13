@@ -70,7 +70,8 @@ public class AtendimentoServiceImpl implements IAtendimentoService {
         Profissional profissional = profissionalRepository.findById(atendimentoRequest.profissionalId())
                 .orElseThrow(() -> new ProfissionalNaoEncontradoException("Profissional não foi encontrado"));
 
-        if (!profissional.getServicos().contains(atendimentoRequest.servicoEscolhido().toUpperCase())) {
+        String servicoEscolhido = atendimentoRequest.servicoEscolhido().toUpperCase();
+        if (profissional.getServicos().stream().noneMatch(s -> s.equalsIgnoreCase(servicoEscolhido))) {
             throw new ServicoInvalidoException(
                     "O Serviço " + atendimentoRequest.servicoEscolhido() +
                             " não pertence a especialidade do profissional " + profissional.getNome());
@@ -262,10 +263,10 @@ public class AtendimentoServiceImpl implements IAtendimentoService {
     private void validarDisponibilidade(Integer profissionalId, Integer clienteId,
                                         Integer atendimentoIgnorarId,
                                         LocalDateTime dataInicio, LocalDateTime dataFim) {
-        if (atendimentoRepository.existsConflitoProfissional(profissionalId, dataInicio, dataFim)) {
+        if (atendimentoRepository.existsConflitoProfissionalIgnorando(profissionalId, dataInicio, dataFim, atendimentoIgnorarId)) {
             throw new AtendimentoException("Este profissional já possui atendimento neste horário.");
         }
-        if (atendimentoRepository.existsConflitoCliente(clienteId, dataInicio, dataFim)) {
+        if (atendimentoRepository.existsConflitoClienteIgnorando(clienteId, dataInicio, dataFim, atendimentoIgnorarId)) {
             throw new AtendimentoException("Você já possui um agendamento conflitante.");
         }
     }

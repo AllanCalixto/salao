@@ -118,3 +118,12 @@ export interface ErrorResponse {
   message: string;
   timestamp?: string;
 }
+
+export interface DisponibilidadeProfissionalResponse {
+  id: number;
+  diaSemana: number;
+  diaSemanaLabel: string;
+  horaInicio: string;
+  horaFim: string;
+  ativo: boolean;
+}

@@ -26,6 +26,23 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Intege
             @Param("dataFim") LocalDateTime dataFim
     );
 
+    // Verifica se existe conflito de horário para o profissional, ignorando um atendimento específico
+    @Query("""
+        SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END
+        FROM Atendimento a
+        WHERE a.profissional.id = :profissionalId
+        AND a.status <> 'CANCELADO'
+        AND a.dataAtendimento < :dataFim
+        AND a.dataFim > :dataInicio
+        AND (:atendimentoIgnorarId IS NULL OR a.id <> :atendimentoIgnorarId)
+    """)
+    boolean existsConflitoProfissionalIgnorando(
+            @Param("profissionalId") Integer profissionalId,
+            @Param("dataInicio") LocalDateTime dataInicio,
+            @Param("dataFim") LocalDateTime dataFim,
+            @Param("atendimentoIgnorarId") Integer atendimentoIgnorarId
+    );
+
     // Verifica se existe conflito de horário para o cliente (sobreposição de intervalos)
     @Query("""
         SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END
@@ -39,6 +56,23 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Intege
             @Param("clienteId") Integer clienteId,
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim
+    );
+
+    // Verifica se existe conflito de horário para o cliente, ignorando um atendimento específico
+    @Query("""
+        SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END
+        FROM Atendimento a
+        WHERE a.cliente.id = :clienteId
+        AND a.status <> 'CANCELADO'
+        AND a.dataAtendimento < :dataFim
+        AND a.dataFim > :dataInicio
+        AND (:atendimentoIgnorarId IS NULL OR a.id <> :atendimentoIgnorarId)
+    """)
+    boolean existsConflitoClienteIgnorando(
+            @Param("clienteId") Integer clienteId,
+            @Param("dataInicio") LocalDateTime dataInicio,
+            @Param("dataFim") LocalDateTime dataFim,
+            @Param("atendimentoIgnorarId") Integer atendimentoIgnorarId
     );
 
     // Busca todos os atendimentos ativos do profissional em uma data específica
