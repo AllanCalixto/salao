@@ -1,16 +1,19 @@
-FROM ubuntu:latest AS build
+# Etapa 1: Build da aplicação
+FROM maven:3.9-eclipse-temurin-21 AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
+WORKDIR /app
+
 COPY . .
 
-RUN apt-get install maven -y
-RUN mvn clean install
+RUN mvn clean package -DskipTests
 
-FROM openjdk:21-jdk-slim
+# Etapa 2: Execução da aplicação
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-COPY --from=build /target/salao-0.0.1-SNAPSHOT.jar salao.jar
-
-ENTRYPOINT ["java", "-jar", "salao.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
