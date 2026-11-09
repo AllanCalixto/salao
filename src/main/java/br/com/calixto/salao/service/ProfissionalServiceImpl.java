@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfissionalServiceImpl implements IProfissionalService{
@@ -54,7 +55,7 @@ public class ProfissionalServiceImpl implements IProfissionalService{
                         disp.setAtivo(true);
                         return disp;
                     })
-                    .toList();
+                    .collect(Collectors.toList());
             profissional.setDisponibilidades(disponibilidades);
         }
 
@@ -87,7 +88,9 @@ public class ProfissionalServiceImpl implements IProfissionalService{
 
         profissional.setNome(profissionalRequest.nome());
         profissional.setEspecialidade(profissionalRequest.especialidade());
-        profissional.setServicos(profissionalRequest.servicos());
+        // Cria uma cópia mutável para evitar UnsupportedOperationException
+        // (o Hibernate precisa modificar a collection durante o gerenciamento)
+        profissional.setServicos(new ArrayList<>(profissionalRequest.servicos()));
 
         if (profissionalRequest.disponibilidade() != null) {
             // Deleta explicitamente as disponibilidades existentes no banco
@@ -106,7 +109,7 @@ public class ProfissionalServiceImpl implements IProfissionalService{
                         disp.setAtivo(true);
                         return disp;
                     })
-                    .toList();
+                    .collect(Collectors.toList());
             profissional.setDisponibilidades(disponibilidades);
         }
 

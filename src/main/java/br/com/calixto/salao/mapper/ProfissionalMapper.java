@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ProfissionalMapper {
@@ -26,7 +27,7 @@ public class ProfissionalMapper {
         Profissional profissional = new Profissional();
         profissional.setNome(profissionalRequest.nome());
         profissional.setEspecialidade(profissionalRequest.especialidade());
-        profissional.setServicos(profissionalRequest.servicos());
+        profissional.setServicos(new ArrayList<>(profissionalRequest.servicos()));
         return profissional;
     }
 
