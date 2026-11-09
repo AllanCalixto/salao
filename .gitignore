@@ -33,12 +33,11 @@ build/
 ### VS Code ###
 .vscode/
 
-### Security - RSA Keys ###
+# Chaves privadas
 *.key
 *.pem
-*.pub
 
-### Environment variables ###
+# Variáveis sensíveis
 .env
 .env.*
 !.env.example
