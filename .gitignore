@@ -54,3 +54,9 @@ dist/
 # Cache Angular
 .angular/
 **/.angular/
+
+# Angular e Node
+**/node_modules/
+**/dist/
+**/.angular/
+**/.cache/
