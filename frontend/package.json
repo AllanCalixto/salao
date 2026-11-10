@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Sistema de Gerenciamento de Salão de Beleza",
     "engines": {
-      "node": "20.x"
+      "node": "26.x"
 },
     "scripts": {
       "ng": "ng",
